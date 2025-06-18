@@ -1,0 +1,87 @@
+package net.endarium.api.minecraft.commands.system;
+
+import net.endarium.api.games.servers.CrystaliserAPI;
+import net.endarium.api.games.servers.CrystaliserServerManager;
+import net.endarium.api.minecraft.commands.HubCommand;
+import net.endarium.api.players.login.LoginManager;
+import net.endarium.api.players.login.PreniumManager;
+import net.endarium.api.players.rank.Rank;
+import net.endarium.api.utils.Messages;
+import net.endarium.api.utils.builders.inventories.InventoryBuilder;
+import net.endarium.api.utils.builders.items.ItemFactory;
+import net.endarium.api.utils.builders.titles.TitleBuilder;
+import net.endarium.api.utils.commands.Command;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffectType;
+
+public class LoginCommand implements Listener {
+
+    private String PREFIX = Messages.ENDARIUM_PREFIX;
+    private String inventoryName = "Es-tu prenium ?";
+
+    @Command(name = { "login" }, minimumRank = Rank.DEFAULT, senderType = Command.SenderType.ONLY_PLAYER)
+    public void onCommand(Player player, String[] args) {
+
+
+
+        LoginManager loginManager = new LoginManager();
+        if (loginManager.isLogged(player.getUniqueId())) {
+            player.sendMessage(PREFIX + ChatColor.YELLOW + " Vous êtes déjà connecté.");
+        } else {
+            if (args.length == 1){
+                if (args[0].equalsIgnoreCase(loginManager.getPassword(player.getUniqueId()))) {
+                    loginManager.makeConnected(player.getUniqueId());
+                    player.sendMessage(PREFIX + ChatColor.YELLOW + "Vous êtes connectés");
+                    player.removePotionEffect(PotionEffectType.BLINDNESS);
+                    new TitleBuilder(ChatColor.GREEN + "Connecté", ChatColor.WHITE + "Bon jeu").send(player);
+
+                } else {
+                    player.sendMessage(PREFIX + ChatColor.YELLOW + "Mauvais Mot de passe.");
+                }
+            } else {
+                player.sendMessage(PREFIX + ChatColor.YELLOW + "Utilisation : /login <motsdepasse>");
+        }
+
+        }
+
+
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        PreniumManager preniumManager = new PreniumManager();
+        if (event.getInventory() == null)
+            return;
+        if (event.getCurrentItem() == null)
+            return;
+        if (event.getCurrentItem().getType().equals(Material.AIR))
+            return;
+        if (!(event.getInventory().getName().equalsIgnoreCase(inventoryName)))
+            return;
+        event.setCancelled(true);
+        switch (event.getCurrentItem().getType()) {
+            case COMMAND:
+                preniumManager.createAccountPrenium(player, true);
+                player.sendMessage(PREFIX + ChatColor.YELLOW + "Vous êtes sur une connection Prenium. Pour tous problèmes rencontrés, merci de contacté un administrateur. Bon jeu :)");
+                player.closeInventory();
+                CrystaliserServerManager.sendPlayerToHub(player, false);
+
+            case BARRIER:
+                preniumManager.createAccountPrenium(player, false);
+                player.sendMessage(PREFIX + ChatColor.YELLOW + "Vous êtes sur une connection crack. Pour tous problèmes rencontrés, merci de contacté un administrateur. Bon jeu :)");
+                player.closeInventory();
+                CrystaliserServerManager.sendPlayerToHub(player, false);
+
+        }
+
+    }
+
+
+}

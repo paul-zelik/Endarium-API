@@ -1,0 +1,191 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>EndariumAPI</groupId>
+	<artifactId>EndariumAPI</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<name>EndariumAPI</name>
+	<description>API du serveur minecraft Endarium.</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<slf4jVersion>1.7.13</slf4jVersion>
+	</properties>
+
+	<build>
+		<defaultGoal>clean install</defaultGoal>
+		<sourceDirectory>src</sourceDirectory>
+
+		<resources>
+			<resource>
+				<directory>resources</directory>
+			</resource>
+		</resources>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+					<createDependencyReducedPom>false</createDependencyReducedPom>
+					<artifactSet>
+						<includes>
+							<include>redis.clients</include>
+							<include>org.apache.commons</include>
+							<include>org.json</include>
+							<include>com.zaxxer</include>
+							<include>org.slf4j</include>
+							<include>*.yml</include>
+						</includes>
+					</artifactSet>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<finalName>${project.artifactId}</finalName>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<repositories>
+
+		<!-- MD5-SNAPSHOTS -->
+		<repository>
+			<id>md_5-snapshots</id>
+			<url>http://repo.md-5.net/content/repositories/snapshots/</url>
+		</repository>
+
+		<!-- BUNGEECORD -->
+		<repository>
+			<id>bungeecord-repo</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</repository>
+
+		<!-- SPIGOT -->
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+
+	</repositories>
+
+	<dependencies>
+
+		<!-- JSON -->
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20090211</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Hikari -->
+		<dependency>
+			<groupId>com.zaxxer</groupId>
+			<artifactId>HikariCP</artifactId>
+			<version>4.0.3</version>
+		</dependency>
+
+		<!-- SLF4J API -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4jVersion}</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- SLF4J Lib -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>${slf4jVersion}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- REDIS -->
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>2.9.0</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<!-- Apache API -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-pool2</artifactId>
+			<version>2.4.2</version>
+		</dependency>
+
+		<!-- BungeeCord -->
+		<dependency>
+			<groupId>net.md-5</groupId>
+			<artifactId>bungeecord-api</artifactId>
+			<version>1.10-SNAPSHOT</version>
+			<type>jar</type>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.md-5</groupId>
+			<artifactId>bungeecord-api</artifactId>
+			<version>1.10-SNAPSHOT</version>
+			<type>javadoc</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- RedisBungee -->
+		<dependency>
+			<groupId>com.imaginarycode.minecraft</groupId>
+			<artifactId>RedisBungee</artifactId>
+			<version>0.5</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libraries/RedisBungee-0.5.jar</systemPath>
+		</dependency>
+
+		<!-- Spigot-API -->
+		<dependency>
+			<groupId>spigot</groupId>
+			<artifactId>spigot</artifactId>
+			<version>1.8.8</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libraries/spigot_server.jar
+			</systemPath>
+		</dependency>
+
+		<!-- Crystaliser -->
+		<dependency>
+			<groupId>crystaliser</groupId>
+			<artifactId>crystaliser</artifactId>
+			<version>1.0.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libraries/crystaliser.jar
+			</systemPath>
+		</dependency>
+
+	</dependencies>
+
+</project>

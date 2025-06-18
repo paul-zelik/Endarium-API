@@ -1,0 +1,40 @@
+###############################
+#           Endarium          #
+#       Version : 0.0.1       #
+###############################
+
+serverName: "Endarium"
+serverIP: "play.endarium.net"
+serverHost: false
+
+# Developer Mode
+developer: true
+
+# Database Logins
+database:
+  enable_mysql: false
+  enable_redis: false
+  mysql:
+    hostname: "127.0.0.1"
+    username: "root"
+    password: ""
+    database: ""
+    port: 3306
+  redis:
+    hostname: "127.0.0.1"
+    password: ""
+    database: 0
+    port: 6379
+
+###############################
+#       Games Settings        #
+###############################
+gameServer:
+  enable_game: false
+  enable_kits: false
+  world_name: "world"
+  min_players: 2
+  enable_spectator: true
+  teams:
+    enable_team: false
+    team_number: 2

@@ -1,0 +1,6 @@
+main: net.endarium.api.minecraft.EndariumBukkit
+name: EndariumAPI
+softdepend: [Crystaliser]
+load: STARTUP
+author: Matthieu
+version: 1.0.2

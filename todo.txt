@@ -1,0 +1,20 @@
+PARTY COMMANDE : 
+
+	- /party add/invite [pseudo] > Permet d'ajouter un joueur à la partie ou de créer une partie si le joueur n'a pas de partie,
+	également la permission est réservée au créateur de la partie ainsi qu'aux joueurs promotes.
+	- /party kick [pseudo] > Exclure un joueur de sa party
+	
+	- /party accept [pseudo] > Accepter l'invitation à une party
+	- /party refuse [pseudo] > Refuser l'invitation à une party
+	
+	- /party tp [pseudo] > Se téléporter à un membre de la party
+	
+	- /party leave > Quitter une party
+	- /party list > Afficher la liste des joueurs
+	- /party disband > Supprimer sa party (uniquement par le créateur)
+	- /party warp > Téléporter les joueurs de sa party dans son serveur
+	
+	- /party [on/off] > Autoriser ou Refuser les demandes de party		
+	
+	- /party promote [pseudo] > promouvoir un joueur dans sa partie (uniquement par le créateur)
+	- /party demote [pseudo] > dépromouvoir un joueur dans sa partie (uniquement par le créateur)

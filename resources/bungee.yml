@@ -1,0 +1,6 @@
+main: net.endarium.api.bungeecord.EndariumBungeeCord
+name: EndariumAPI
+softdepend: [Crystaliser]
+depends: [RedisBungee]
+author: Matthieu
+version: 1.0.2
