@@ -3,6 +3,7 @@ package net.endarium.api.minecraft.commands.system;
 import net.endarium.api.games.servers.CrystaliserAPI;
 import net.endarium.api.games.servers.CrystaliserServerManager;
 import net.endarium.api.minecraft.commands.HubCommand;
+import net.endarium.api.players.EndaPlayer;
 import net.endarium.api.players.login.LoginManager;
 import net.endarium.api.players.login.PreniumManager;
 import net.endarium.api.players.rank.Rank;
@@ -29,7 +30,7 @@ public class LoginCommand implements Listener {
     public void onCommand(Player player, String[] args) {
 
 
-
+        EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
         LoginManager loginManager = new LoginManager();
         if (loginManager.isLogged(player.getUniqueId())) {
             player.sendMessage(PREFIX + ChatColor.YELLOW + " Vous êtes déjà connecté.");
@@ -37,6 +38,7 @@ public class LoginCommand implements Listener {
             if (args.length == 1){
                 if (args[0].equalsIgnoreCase(loginManager.getPassword(player.getUniqueId()))) {
                     loginManager.makeConnected(player.getUniqueId());
+                    endaPlayer.setLogged(true);
                     player.sendMessage(PREFIX + ChatColor.YELLOW + "Vous êtes connectés");
                     player.removePotionEffect(PotionEffectType.BLINDNESS);
                     new TitleBuilder(ChatColor.GREEN + "Connecté", ChatColor.WHITE + "Bon jeu").send(player);

@@ -22,10 +22,10 @@ public class APIPlayerMove implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        LoginManager loginManager = new LoginManager();
+        EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
 
         // Bloquer le Mouvement des Joueurs
-        if (!(loginManager.isLogged(player.getUniqueId()))) {
+        if (!(endaPlayer.isLogged())) {
             Location from = event.getFrom();
             Location to = event.getTo();
             double x = Math.floor(from.getX());

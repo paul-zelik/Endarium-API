@@ -21,8 +21,8 @@ public class ReplayCommand {
 	public void onCommand(Player player, String[] args) {
 
 
-		LoginManager loginManager = new LoginManager();
-		if (!(loginManager.isLogged(player.getUniqueId()))) {
+		EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
+		if (!(endaPlayer.isLogged())) {
 			return;
 		}
 
@@ -50,7 +50,6 @@ public class ReplayCommand {
 
 		// Si le Joueur n'est pas en Spectateur
 		if ((GameStatus.isStatus(GameStatus.GAME))) {
-			EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
 			if ((endaPlayer != null) && (!(endaPlayer.isSpectator()))) {
 				player.sendMessage(
 						Messages.ENDARIUM_PREFIX + ChatColor.RED + "Erreur, vous êtes déjà en train de jouer.");

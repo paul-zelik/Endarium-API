@@ -4,6 +4,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.UUID;
 
+import com.imaginarycode.minecraft.redisbungee.events.PlayerChangedServerNetworkEvent;
 import net.endarium.api.bungeecord.EndariumBungeeCord;
 import net.endarium.api.bungeecord.channels.RedisBungeeChannel;
 import net.endarium.api.games.servers.CrystaliserServerManager;
@@ -15,17 +16,18 @@ import net.endarium.api.players.login.LoginManager;
 import net.endarium.api.players.moderation.ban.BanInfos;
 import net.endarium.api.players.others.AntiBot;
 import net.endarium.api.players.party.Party;
+import net.endarium.api.players.party.PartyManager;
 import net.endarium.api.players.rank.Rank;
 import net.endarium.api.utils.GSONUtils;
 import net.endarium.api.utils.Messages;
 import net.endarium.api.utils.mojang.UUIDEndaFetcher;
+import net.endarium.crystaliser.servers.EndaServer;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.LoginEvent;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ServerConnectedEvent;
+import net.md_5.bungee.api.connection.Server;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
@@ -122,8 +124,27 @@ public class BungeePlayerConnectListener implements Listener {
 				GSONUtils.getGson().toJson(friendChannelRequest));
 
 
+
 	}
 
+
+	@EventHandler
+	public void onPlayerChangeServer(ServerSwitchEvent event) {
+		ProxiedPlayer proxiedPlayer = event.getPlayer();
+
+		PartyManager partyManager = EndariumBungeeCord.getInstance().getPartyManager();
+		if (partyManager.findPartyByPlayer(proxiedPlayer) != null) {
+			Party party = partyManager.findPartyByPlayer(proxiedPlayer);
+			if (party.getPlayerOwner().equals(proxiedPlayer)) {
+				Server server = event.getPlayer().getServer();
+				for (ProxiedPlayer player : party.getPlayers()) {
+					player.connect(server.getInfo());
+					player.sendMessage("Vous avez été tp sur un nouveau serveur.");
+				}
+			}
+		}
+
+	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onPlayerLogout(PlayerDisconnectEvent event) {
@@ -149,7 +170,6 @@ public class BungeePlayerConnectListener implements Listener {
 		LoginManager loginManager = new LoginManager();
 		loginManager.makeDisconnected(proxiedPlayer.getUniqueId());
 
-		// Définir la déconnexion Redis au Joueur
 		endaPlayer.setDisconnected();
 		endaPlayer.logoutEndaPlayerCache();
 	}
@@ -157,8 +177,21 @@ public class BungeePlayerConnectListener implements Listener {
 	@EventHandler
 	public void onLeave(PlayerDisconnectEvent event){
 		ProxiedPlayer pp = event.getPlayer();
-		if((Party.hasParty(pp)) && (Party.getParty(pp).isCreator(pp))){
-			Party.getParty(pp).removeParty();
+		PartyManager partyManager = EndariumBungeeCord.getInstance().getPartyManager();
+		if (partyManager.findPartyByPlayer(pp) != null) {
+
+			Party party = partyManager.findPartyByPlayer(pp);
+			if (party.getPlayerOwner().equals(pp.getUniqueId())) {
+				for (ProxiedPlayer player : party.getPlayers()) {
+					party.removePlayer(player);
+					player.sendMessage(ChatColor.GOLD + "[Party] " + ChatColor.RED + "Votre groupe a été suprimé.");
+				}
+
+				partyManager.removeParty(party);
+			} else {
+				party.removePlayer(pp);
+			}
+
 		}
 	}
 

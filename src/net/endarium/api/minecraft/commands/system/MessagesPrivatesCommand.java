@@ -24,8 +24,8 @@ public class MessagesPrivatesCommand {
 			"whispers" }, minimumRank = Rank.DEFAULT, senderType = SenderType.ONLY_PLAYER)
 	public void onCommandMessage(Player player, String[] args) {
 
-		LoginManager loginManager = new LoginManager();
-		if (!(loginManager.isLogged(player.getUniqueId()))) {
+		EndaPlayer endaPlayer =  EndaPlayer.get(player.getUniqueId());
+		if (!(endaPlayer.isLogged())) {
 			return;
 		}
 
@@ -34,7 +34,6 @@ public class MessagesPrivatesCommand {
 			return;
 		}
 
-		EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
 		Friends friends = endaPlayer.getFriends();
 
 		/** Commande avec 1 Argument */

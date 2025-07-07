@@ -15,8 +15,8 @@ public class LangCommand {
             "langage" }, minimumRank = Rank.DEFAULT, senderType = Command.SenderType.ONLY_PLAYER)
     public void onCommand(Player player, String[] args) {
 
-        LoginManager loginManager = new LoginManager();
-        if (!(loginManager.isLogged(player.getUniqueId()))) {
+        EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
+        if (!(endaPlayer.isLogged())) {
             return;
         }
 
@@ -36,8 +36,6 @@ public class LangCommand {
             return;
         }
 
-        // Effectuer le changement de Langue a l'Utilisateur
-        EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
         endaPlayer.setLanguages(languages);
         player.sendMessage(Messages.ENDARIUM_PREFIX + ChatColor.WHITE + "Changement de langage en " + ChatColor.YELLOW
                 + languages.getName() + ChatColor.WHITE + ".");

@@ -1,6 +1,7 @@
 package net.endarium.api.minecraft.commands.system;
 
 import net.endarium.api.games.servers.CrystaliserAPI;
+import net.endarium.api.players.EndaPlayer;
 import net.endarium.api.players.login.LoginManager;
 import net.endarium.api.players.rank.Rank;
 import net.endarium.api.utils.commands.Command;
@@ -17,8 +18,8 @@ public class LagCommand {
     @Command(name = { "lag", "lags", "tps", "ping" }, minimumRank = Rank.DEFAULT, senderType = SenderType.ONLY_PLAYER)
     public void onCommand(Player player, String[] args) {
 
-        LoginManager loginManager = new LoginManager();
-        if (!(loginManager.isLogged(player.getUniqueId()))) {
+        EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
+        if (!(endaPlayer.isLogged())) {
             return;
         }
 

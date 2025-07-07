@@ -20,12 +20,11 @@ public class HostCommand {
     @Command(name = { "host", "h" }, minimumRank = Rank.DEFAULT, senderType = Command.SenderType.ONLY_PLAYER)
     public void onCommand(Player player, String[] args) {
 
-        LoginManager loginManager = new LoginManager();
-        if (!(loginManager.isLogged(player.getUniqueId()))) {
+        EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
+        if (!(endaPlayer.isLogged())) {
             return;
         }
 
-        EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
         EndaServer endaServer = CrystaliserAPI.getEndaServer();
 
         // Contrôler des permissions du Joueur

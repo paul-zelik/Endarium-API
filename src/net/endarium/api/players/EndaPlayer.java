@@ -9,6 +9,7 @@ import net.endarium.api.EndariumCommons;
 import net.endarium.api.EndariumEntities;
 import net.endarium.api.players.friends.Friends;
 import net.endarium.api.players.language.Languages;
+import net.endarium.api.players.login.LoginManager;
 import net.endarium.api.players.moderation.mute.MuteInfos;
 import net.endarium.api.players.party.Party;
 import net.endarium.api.players.rank.Rank;
@@ -28,6 +29,7 @@ public class EndaPlayer {
 	private UUID uuid;
 	private Rank rank;
 	private List<String> permissions;
+	private boolean isLogged;
 
 	private Friends friend;
 	private Languages languages;
@@ -38,6 +40,7 @@ public class EndaPlayer {
 	private boolean staffChat = true, modFly = false;
 
 	private EndaPlayerCache endaPlayerCache;
+	private LoginManager loginManager;
 
 	/**
 	 * Génération d'un compte joueur Endarium.
@@ -55,6 +58,10 @@ public class EndaPlayer {
 			// Gestion du Cache du Joueur
 			if (this.endaPlayerCache == null)
 				this.endaPlayerCache = this.getEndaPlayerCache();
+
+			loginManager = new LoginManager();
+
+			this.isLogged = loginManager.isLogged(uuid);
 
 			System.out.println(EndariumAPI.getPrefixAPI() + "Le compte : " + uuid.toString() + ", est bien connecté.");
 		} catch (Exception exception) {
@@ -385,5 +392,13 @@ public class EndaPlayer {
 		if (endaPlayers.get(uuid) == null)
 			endaPlayers.put(uuid, new EndaPlayer(uuid));
 		return endaPlayers.get(uuid);
+	}
+
+	public boolean isLogged() {
+		return this.isLogged;
+	}
+
+	public void setLogged(boolean logged) {
+		this.isLogged = logged;
 	}
 }

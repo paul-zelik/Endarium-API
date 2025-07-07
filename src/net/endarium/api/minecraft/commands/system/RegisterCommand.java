@@ -1,6 +1,7 @@
 package net.endarium.api.minecraft.commands.system;
 
 import net.endarium.api.games.servers.CrystaliserServerManager;
+import net.endarium.api.players.EndaPlayer;
 import net.endarium.api.players.login.LoginManager;
 import net.endarium.api.players.login.PreniumManager;
 import net.endarium.api.players.rank.Rank;
@@ -39,6 +40,8 @@ public class RegisterCommand implements Listener {
                     if (args[0].equalsIgnoreCase(args[1])) {
                         loginManager.createAccount(player.getUniqueId(), args[0]);
                         loginManager.makeConnected(player.getUniqueId());
+                        EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
+                        endaPlayer.setLogged(true);
                         player.sendMessage(PREFIX + ChatColor.YELLOW + "Vous êtes enregistré. Bon jeu :).");
                         player.removePotionEffect(PotionEffectType.BLINDNESS);
                         new TitleBuilder(ChatColor.GREEN + "Connecté", ChatColor.WHITE + "Bon jeu").send(player);

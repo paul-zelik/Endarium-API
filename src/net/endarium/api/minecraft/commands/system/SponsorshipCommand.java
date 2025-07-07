@@ -24,14 +24,13 @@ public class SponsorshipCommand {
     @Command(name = { "parrain", "parrainage" }, minimumRank = Rank.DEFAULT, senderType = Command.SenderType.ONLY_PLAYER)
     public void onCommand(Player player, String[] args) {
 
-
-        LoginManager loginManager = new LoginManager();
-        if (!(loginManager.isLogged(player.getUniqueId()))) {
+        // Vérifier la permission du Joueur
+        EndaPlayer golemaPlayer = EndaPlayer.get(player.getUniqueId());
+        if (!(golemaPlayer.isLogged())) {
             return;
         }
 
-        // Vérifier la permission du Joueur
-        EndaPlayer golemaPlayer = EndaPlayer.get(player.getUniqueId());
+
         if (golemaPlayer == null)
             return;
         if (golemaPlayer.getRank().getPower() < Rank.VIP.getPower()) {

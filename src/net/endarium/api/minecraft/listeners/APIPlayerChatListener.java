@@ -39,9 +39,8 @@ public class APIPlayerChatListener implements Listener {
 
 		String message = event.getMessage();
 		event.setCancelled(true);
-		LoginManager loginManager = new LoginManager();
 
-		if (loginManager.isLogged(player.getUniqueId())) {
+		if (endaPlayer.isLogged()) {
 
 			// (t)Chat en ZMOD
 			if (endaPlayer.isModeModeration()) {

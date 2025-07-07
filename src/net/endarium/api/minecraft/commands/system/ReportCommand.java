@@ -1,6 +1,7 @@
 package net.endarium.api.minecraft.commands.system;
 
 import net.endarium.api.minecraft.EndariumBukkit;
+import net.endarium.api.players.EndaPlayer;
 import net.endarium.api.players.login.LoginManager;
 import net.endarium.api.players.report.Report;
 import net.endarium.api.players.report.ReportManager;
@@ -37,8 +38,8 @@ public class ReportCommand {
 	@Command(name = { "report", "reports" }, minimumRank = Rank.DEFAULT, senderType = SenderType.ONLY_PLAYER)
 	public void onCommand(Player player, String[] args) {
 
-		LoginManager loginManager = new LoginManager();
-		if (!(loginManager.isLogged(player.getUniqueId()))) {
+		EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
+		if (!(endaPlayer.isLogged())) {
 			return;
 		}
 

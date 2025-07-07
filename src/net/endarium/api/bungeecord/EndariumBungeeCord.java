@@ -17,6 +17,7 @@ import net.endarium.api.EndariumCommons;
 import net.endarium.api.bungeecord.channels.RedisBungeeChannel;
 import net.endarium.api.bungeecord.channels.RedisBungeeListener;
 import net.endarium.api.bungeecord.commands.ListPlayersCommand;
+import net.endarium.api.bungeecord.commands.player.PartyCommand;
 import net.endarium.api.bungeecord.commands.staff.AntibotCommand;
 import net.endarium.api.bungeecord.commands.staff.StaffChatCommand;
 import net.endarium.api.bungeecord.listeners.BungeeBalancingHubListener;
@@ -25,6 +26,7 @@ import net.endarium.api.bungeecord.listeners.BungeeServerListPingListener;
 import net.endarium.api.config.MySQLConfig;
 import net.endarium.api.config.RedisConfig;
 import net.endarium.api.players.party.Party;
+import net.endarium.api.players.party.PartyManager;
 import net.endarium.api.utils.EndariumAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
@@ -47,6 +49,7 @@ public class EndariumBungeeCord extends Plugin {
 	private Configuration configuration;
 
 	private static RedisBungeeAPI redisBungeeAPI;
+	private PartyManager partyManager;
 
 	private int slots = 300;
 	private Boolean antibotstatue = false;
@@ -69,34 +72,13 @@ public class EndariumBungeeCord extends Plugin {
 		super.onLoad();
 	}
 
-	@EventHandler
-	public void onConnect(ServerConnectedEvent event){
-		ProxiedPlayer pp = event.getPlayer();
-		if((Party.hasParty(pp)) && (Party.getParty(pp).isCreator(pp))){
-			for(ProxiedPlayer pp2 : Party.getParty(pp).getPlayers()){
-				if(event.getServer().getInfo().getName().equalsIgnoreCase("hub")){
-					return;
-				}
-
-				pp2.connect(event.getServer().getInfo());
-				pp2.sendMessage(new TextComponent("�7Votre Party vient de rejoindre le serveur: �a" + event.getServer().getInfo().getName()));
-			}
-		}
-	}
-
-	@EventHandler
-	public void onLeave(PlayerDisconnectEvent event){
-		ProxiedPlayer pp = event.getPlayer();
-		if((Party.hasParty(pp)) && (Party.getParty(pp).isCreator(pp))){
-			Party.getParty(pp).removeParty();
-		}
-	}
 
 	@Override
 	public void onEnable() {
 
 		// Enregistrement des Channels & Messaging
 		redisBungeeAPI = RedisBungee.getApi();
+		this.partyManager = new PartyManager();
 		List<String> channelList = new ArrayList<String>();
 		for (RedisBungeeChannel redisBungeeChannel : RedisBungeeChannel.values()) {
 			channelList.add(redisBungeeChannel.getName());
@@ -116,7 +98,8 @@ public class EndariumBungeeCord extends Plugin {
 
 		pluginManager.registerCommand(instance, new ListPlayersCommand());
 		pluginManager.registerCommand(instance, new StaffChatCommand());
-	//	pluginManager.registerCommand(instance, new AntibotCommand());
+		pluginManager.registerCommand(instance, new AntibotCommand());
+		pluginManager.registerCommand(instance, new PartyCommand());
 
 		// Gestion des différentes fonctionnalitées BungeeCord
 		this.updatePlayersTabList();
@@ -141,6 +124,10 @@ public class EndariumBungeeCord extends Plugin {
 		}
 
 		super.onDisable();
+	}
+
+	public PartyManager getPartyManager() {
+		return this.partyManager;
 	}
 
 	/**

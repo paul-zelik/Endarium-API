@@ -1,5 +1,6 @@
 package net.endarium.api.minecraft.commands.system;
 
+import net.endarium.api.players.EndaPlayer;
 import net.endarium.api.players.login.LoginManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,8 +24,8 @@ public class GameStartCommand {
 			"endarium.command.gamestart" }, minimumRank = Rank.STAFF, senderType = SenderType.ONLY_PLAYER)
 	public void onCommandGameStart(Player player, String[] args) {
 
-		LoginManager loginManager = new LoginManager();
-		if (!(loginManager.isLogged(player.getUniqueId()))) {
+		EndaPlayer endaPlayer = EndaPlayer.get(player.getUniqueId());
+		if (!(endaPlayer.isLogged())) {
 			return;
 		}
 
